@@ -100,7 +100,7 @@ def parse_jd_list_page(page_source):
             '마감기한': safe_extract_text(jd_row, 'td.odd span.date'),
             'JD링크': 'https://www.jobkorea.co.kr' + jd_title_element['href'].strip() if jd_title_element else "",
             '작업대상': "Wait",
-            datetime.datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M:%S")
+            '수집일시': datetime.datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d")
         }
         page_data.append(data)
     return page_data
@@ -326,6 +326,7 @@ if __name__ == "__main__":
             
         # 60초 대기 후 다시 시간 체크
         time.sleep(60)
+
 
 
 
