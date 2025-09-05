@@ -1,0 +1,7 @@
+pandas
+pyperclip
+beautifulsoup4
+selenium
+gspread
+oauth2client
+gspread-dataframe
