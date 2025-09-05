@@ -1,7 +1,7 @@
-# 파일 이름: main.py
+# 파일 이름: main.py (이 내용으로 덮어쓰기)
 
 # ==============================================================================
-# 1. 라이브러리 임포트
+# 1. 라이브러리 임포트 (이전과 동일)
 # ==============================================================================
 import time
 import datetime
@@ -17,10 +17,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
-from libs import OpenGooglesheets as Google # 사용자 정의 모듈
+from libs import OpenGooglesheets as Google
 
 # ==============================================================================
-# 2. 상수(CONSTANTS) 정의
+# 2. 상수(CONSTANTS) 정의 (이전과 동일)
 # ==============================================================================
 JOBKOREA_LOGIN_URL = 'https://www.jobkorea.co.kr/Login'
 JOBKOREA_SEARCH_URL = 'https://www.jobkorea.co.kr/recruit/joblist?menucode=local&localorder=1'
@@ -36,12 +36,13 @@ EXCLUSION_SHEET_NAME = '제외리스트'
 EXCLUSION_JD_TITLE_PATTERN = r"(?i)abap|sap|강사|수리|코치|멘토"
 
 # ==============================================================================
-# 3. 핵심 기능 함수 정의
+# 3. 핵심 기능 함수 정의 (이전과 동일)
 # ==============================================================================
+# initialize_driver, login_to_jobkorea, ... scrape_company_details 등 모든 함수는
+# 이전 답변과 동일하게 여기에 그대로 복사/붙여넣기 합니다.
 def initialize_driver():
     """셀레니움 웹드라이버를 초기화하고 반환합니다."""
     options = webdriver.ChromeOptions()
-    # 클라우드타입과 같은 서버 환경에서는 GUI가 없으므로 headless 모드가 필수입니다.
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
@@ -166,10 +167,8 @@ def get_contact_details(driver, jd_link):
 def get_jd_details(driver, jd_link):
     return {}
 
-# ==============================================================================
-# 4. 메인 실행 로직
-# ==============================================================================
 def run_phase1(driver):
+    # Phase 1 로직 ... (이전과 동일)
     print("🚀 [Phase 1] 채용 공고 목록 수집을 시작합니다.")
     print("⏳ 구글 시트에서 기존 JD 목록과 제외 리스트를 불러옵니다...")
     JD_LIST_sheet, JD_LIST_df = Google.OpenGooglesheets(JD_LIST_SPREADSHEET_URL, JD_LIST_SHEET_NAME)
@@ -224,6 +223,7 @@ def run_phase1(driver):
     print("🎉 [Phase 1] 모든 작업이 성공적으로 완료되었습니다.")
 
 def run_phase2(driver):
+    # Phase 2 로직 ... (이전과 동일)
     print("\n🚀 [Phase 2] JD 상세 정보 및 연락처 수집을 시작합니다.")
     print("⏳ '전체JD' 시트에서 작업 대상을 불러옵니다...")
     JD_LIST_sheet, JD_LIST_df = Google.OpenGooglesheets(JD_LIST_SPREADSHEET_URL, JD_LIST_SHEET_NAME)
@@ -276,7 +276,11 @@ def run_phase2(driver):
             continue
     print("\n🎉 [Phase 2] 모든 작업이 성공적으로 완료되었습니다.")
 
-if __name__ == "__main__":
+# ==============================================================================
+# 4. [수정된] 메인 실행 블록
+# ==============================================================================
+def main_task():
+    """크롤링의 모든 과정을 수행하는 메인 함수"""
     driver = None
     try:
         driver = initialize_driver()
@@ -288,4 +292,21 @@ if __name__ == "__main__":
     finally:
         if driver:
             driver.quit()
-        print("🔚 스크립트 실행을 모두 종료합니다.")
+        print("🔚 크롤링 작업 세션을 종료합니다.")
+
+if __name__ == "__main__":
+    while True:
+        now = datetime.datetime.now()
+        
+        # 매일 아침 7시 00분에만 실행되도록 조건 설정
+        if now.hour == 7 and now.minute == 0:
+            print(f"==== {now.strftime('%Y-%m-%d %H:%M:%S')} ====")
+            print("목표 시각(07:00)이므로 크롤링을 시작합니다.")
+            main_task()
+            print("크롤링 작업을 완료했습니다. 다음 실행까지 대기합니다.")
+        else:
+            # 현재 시간을 1분마다 보여주어 서버가 살아있는지 확인하기 용이하게 함
+            print(f"현재 시각 {now.strftime('%H:%M:%S')}. 07:00까지 대기 중...")
+            
+        # 60초 대기 후 다시 시간 체크
+        time.sleep(60)
