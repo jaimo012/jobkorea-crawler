@@ -245,7 +245,7 @@ def run_phase2(driver):
                 TARGET_COLUMN_INDEX = 7 # G열
                 if contact_details:
                     final_data = {
-                        '수집일자': datetime.datetime.now().strftime("%Y-%m-%d"), '기업명': company_name,
+                        '수집일자': datetime.datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d"), '기업명': company_name,
                         '기업링크': company_link, 'Title': jd_title, 'JDLink': jd_link,
                         **company_details, **contact_details
                     }
@@ -311,5 +311,6 @@ if __name__ == "__main__":
             
         # 60초 대기 후 다시 시간 체크
         time.sleep(60)
+
 
 
