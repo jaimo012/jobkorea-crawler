@@ -294,23 +294,39 @@ def main_task():
         print("🔚 크롤링 작업 세션을 종료합니다.")
 
 if __name__ == "__main__":
+    # 스크립트가 처음 시작될 때를 위한 스위치(Flag) 변수
+    is_first_run = True
+
     while True:
-        # [수정] 현재 시간을 'Asia/Seoul' 기준으로 가져옵니다.
         KST = ZoneInfo("Asia/Seoul")
         now = datetime.datetime.now(KST)
         
-        # 매일 아침 7시 00분에만 실행되도록 조건 설정
-        if now.hour == 7 and now.minute == 0:
+        # 조건 1: 지금이 아침 7시 정각인가?
+        is_scheduled_time = (now.hour == 7 and now.minute == 0)
+        
+        # [수정] 정해진 시간이거나, 또는 첫 실행일 경우에만 크롤링 시작
+        if is_scheduled_time or is_first_run:
             print(f"==== {now.strftime('%Y-%m-%d %H:%M:%S KST')} ====")
-            print("목표 시각(07:00 KST)이므로 크롤링을 시작합니다.")
-            main_task()
+
+            if is_first_run:
+                print("🚀 첫 실행 감지! 테스트를 위해 즉시 크롤링을 시작합니다.")
+            else:
+                print("목표 시각(07:00 KST)이므로 크롤링을 시작합니다.")
+            
+            main_task() # 실제 크롤링 작업 실행
+            
             print("크롤링 작업을 완료했습니다. 다음 실행까지 대기합니다.")
+            
+            # [수정] 첫 실행이 끝났으므로, 스위치를 꺼서 다시는 즉시 실행되지 않도록 함
+            if is_first_run:
+                is_first_run = False
         else:
-            # 현재 시간을 1분마다 보여주어 서버가 살아있는지 확인하기 용이하게 함
+            # 평소에는 현재 시간을 보여주며 대기
             print(f"현재 시각 {now.strftime('%H:%M:%S KST')}. 07:00 KST까지 대기 중...")
             
         # 60초 대기 후 다시 시간 체크
         time.sleep(60)
+
 
 
 
